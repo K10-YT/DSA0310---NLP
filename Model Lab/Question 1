@@ -1,0 +1,41 @@
+
+import re
+import nltk
+from nltk.stem import PorterStemmer
+
+# Input text
+text = "The students are studying NLP. They are playing games and running daily."
+
+print("ORIGINAL TEXT")
+print(text)
+
+# Stage 1: Regular Expression
+print("\n1. REGULAR EXPRESSION PATTERNS")
+
+patterns = re.findall(r'\b[A-Z]{2,}\b|\b\d+\b', text)
+print("Identified Patterns:", patterns)
+
+# Stage 2: Morphological Analysis
+print("\n2. MORPHOLOGICAL ANALYSIS")
+
+words = re.findall(r'\b[a-zA-Z]+\b', text.lower())
+
+for word in words:
+    if word.endswith("ing"):
+        print(word, "-> Root:", word[:-3], "| Suffix: ing")
+    elif word.endswith("ed"):
+        print(word, "-> Root:", word[:-2], "| Suffix: ed")
+    elif word.endswith("s"):
+        print(word, "-> Root:", word[:-1], "| Suffix: s")
+    else:
+        print(word, "-> Root:", word, "| No suffix")
+
+# Stage 3: Porter Stemming
+print("\n3. PORTER STEMMING")
+
+stemmer = PorterStemmer()
+
+for word in words:
+    print(word, "->", stemmer.stem(word))
+
+print("\nPreprocessing Completed Successfully!")
