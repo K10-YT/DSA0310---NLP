@@ -1,0 +1,45 @@
+
+import nltk
+
+from nltk import PCFG
+from nltk.parse import ViterbiParser
+
+# Define PCFG grammar
+grammar = PCFG.fromstring("""
+S -> NP VP [1.0]
+NP -> Det N [0.6] | N [0.4]
+VP -> V NP [0.7] | V [0.3]
+Det -> 'the' [1.0]
+N -> 'student' [0.5] | 'book' [0.5]
+V -> 'reads' [1.0]
+""")
+
+# Input sentence
+sentence = "the student reads the book".split()
+
+print("INPUT SENTENCE:")
+print(" ".join(sentence))
+
+# Create probabilistic parser
+parser = ViterbiParser(grammar)
+
+print("\nPOSSIBLE DERIVATIONS:")
+
+parses = list(parser.parse(sentence))
+
+if parses:
+    for tree in parses:
+        print("\nDerivation:")
+        print(tree)
+        print("Probability:", tree.prob())
+
+    # Select most probable interpretation
+    best_parse = max(parses, key=lambda t: t.prob())
+
+    print("\nMOST PROBABLE INTERPRETATION:")
+    print(best_parse)
+
+    print("Highest Probability:", best_parse.prob())
+
+else:
+    print("No valid grammatical derivation found.")
